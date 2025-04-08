@@ -1,0 +1,696 @@
+/* --- Base Variables (Light Mode & Defaults) --- */
+:root {
+    --bg-color: #f4f7f6;
+    --container-bg: #ffffff;
+    --chat-box-bg: #fdfdfd;
+    --input-bg: #ffffff;
+    --text-color: #333333;
+    --text-muted-color: #555555;
+    --border-color: #eeeeee;
+    --border-input-color: #cccccc;
+    --primary-color: #007bff;
+    --primary-hover-color: #0056b3;
+    --secondary-color: #6c757d;
+    --secondary-hover-color: #5a6268;
+    --accent-color-user: #007bff;
+    --accent-color-assistant: #28a745;
+    --error-color: #dc3545;
+    --warning-color: #d9534f;
+    --working-color: #ffc107; /* Example: Yellowish */
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --icon-button-color: #6c757d;
+    --icon-button-hover-bg: #e9ecef;
+    --message-user-bg: var(--primary-color);
+    --message-user-text: white;
+    --message-assistant-bg: var(--input-bg);
+    --message-assistant-text: var(--text-color);
+    --message-assistant-border: var(--border-color);
+    --sidebar-bg: var(--chat-box-bg); /* Sidebar background */
+    --sidebar-hover-bg: var(--icon-button-hover-bg);
+    --sidebar-active-bg: var(--primary-color);
+    --sidebar-active-text: white;
+}
+
+/* --- Dark Mode Overrides --- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1a1a;
+        --container-bg: #2c2c2c;
+        --chat-box-bg: #252525;
+        --input-bg: #383838;
+        --text-color: #e0e0e0;
+        --text-muted-color: #a0a0a0;
+        --border-color: #444444;
+        --border-input-color: #555555;
+        --primary-color: #0d6efd; /* Slightly brighter blue for dark */
+        --primary-hover-color: #3b82f6;
+        --secondary-color: #adb5bd;
+        --secondary-hover-color: #ced4da;
+        --accent-color-user: #3b82f6;
+        --accent-color-assistant: #4ade80; /* Brighter green */
+        --error-color: #f87171; /* Brighter red */
+        --warning-color: #fca5a5;
+        --working-color: #facc15; /* Brighter yellow */
+        --shadow-color: rgba(0, 0, 0, 0.4); /* Darker shadow for contrast */
+        --icon-button-color: #adb5bd;
+        --icon-button-hover-bg: #495057;
+        --message-user-bg: var(--primary-color);
+        --message-user-text: white; /* Keep user text white */
+        --message-assistant-bg: var(--input-bg);
+        --message-assistant-text: var(--text-color);
+        --message-assistant-border: var(--border-color);
+        --sidebar-bg: var(--chat-box-bg);
+        --sidebar-hover-bg: var(--icon-button-hover-bg);
+        --sidebar-active-bg: var(--primary-color);
+        --sidebar-active-text: white;
+    }
+}
+
+/* --- General Styles --- */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 15px; /* Slightly less padding */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically center container */
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    background-color: var(--container-bg);
+    padding: 15px 20px; /* Adjusted padding */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    width: 95%;
+    max-width: 1200px;
+    height: 90vh; /* Define container height */
+    max-height: 850px; /* Optional max height */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: background-color 0.3s ease;
+    overflow: hidden; /* Prevent settings panel overflow */
+}
+
+/* --- Header --- */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; /* Reduced margin */
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 1.4em; /* Slightly smaller */
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    color: var(--icon-button-color);
+    font-size: 1.2em; /* Slightly smaller */
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    line-height: 1;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.icon-button:hover {
+    background-color: var(--icon-button-hover-bg);
+    color: var(--text-color);
+}
+
+/* --- Settings Panel --- */
+.settings-panel {
+    display: none;
+    position: absolute;
+    top: 55px; /* Adjusted position */
+    right: 20px; /* Adjusted position */
+    background-color: var(--container-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 15px 20px; /* Adjusted padding */
+    box-shadow: 0 5px 15px var(--shadow-color);
+    z-index: 10;
+    width: 350px; /* Slightly wider for params */
+    max-width: 90%;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    max-height: 80vh; /* Prevent panel getting too tall */
+    overflow-y: auto; /* Allow scrolling within panel */
+}
+.settings-panel.visible {
+    display: block;
+}
+
+.settings-panel h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    color: var(--text-color);
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.settings-section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed var(--border-color);
+}
+.settings-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 10px; /* Less margin for last section */
+}
+
+.settings-section h3 {
+    font-size: 1em;
+    color: var(--text-muted-color);
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+
+.setting-item {
+    margin-bottom: 15px;
+}
+.setting-item label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600; /* Slightly bolder labels */
+    color: var(--text-muted-color);
+    font-size: 0.9em;
+}
+.setting-item input[type="password"],
+.setting-item input[type="number"] { /* Style number input */
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-input-color);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.95em;
+}
+
+/* Specific style for API key area button */
+.setting-item #load-models-button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 8px;
+    font-size: 0.85em;
+    padding: 4px 8px;
+}
+.setting-item #load-models-button:hover:not(:disabled) {
+     background-color: var(--secondary-hover-color);
+}
+.setting-item #load-models-button:disabled {
+    background-color: var(--text-muted-color);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.api-warning {
+    font-size: 0.8em;
+    color: var(--warning-color);
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+.param-note {
+     font-size: 0.8em;
+     color: var(--text-muted-color);
+     margin-top: 10px;
+}
+
+/* Parameter Item Specific Styles */
+.param-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.param-item label {
+    flex-shrink: 0; /* Prevent label from shrinking */
+    margin-bottom: 0; /* Reset margin */
+    width: 120px; /* Fixed label width */
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.param-item input[type="range"] {
+    flex-grow: 1; /* Allow slider to take space */
+    cursor: pointer;
+    height: 5px; /* Slimmer slider */
+    vertical-align: middle; /* Align better */
+}
+.param-item input[type="number"] {
+     width: 80px; /* Fixed width for number input */
+     flex-grow: 0; /* Don't let it grow */
+     text-align: right;
+     padding: 5px; /* Smaller padding */
+}
+
+.param-value {
+    font-size: 0.85em;
+    color: var(--text-color);
+    font-weight: bold;
+    min-width: 35px; /* Ensure space for value */
+    text-align: right;
+}
+
+
+#close-settings-button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px; /* Slightly larger */
+    background-color: var(--primary-color); /* Make close primary */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 15px;
+    transition: background-color 0.2s ease;
+}
+#close-settings-button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+
+/* --- Main Layout (Sidebar + Chat Area) --- */
+.main-layout {
+    display: flex;
+    flex-grow: 1; /* Take remaining vertical space */
+    overflow: hidden;
+    gap: 15px;
+    /* Removed margin-top, handled by container padding */
+}
+
+/* --- Sidebar Styles --- */
+.sidebar {
+    background-color: var(--sidebar-bg);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    width: 240px; /* Adjusted width */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1em; /* Adjusted size */
+    text-align: center;
+    color: var(--text-muted-color);
+    flex-shrink: 0; /* Prevent title shrinking */
+}
+
+.sidebar-button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95em;
+    text-align: center;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0; /* Prevent button shrinking */
+}
+.sidebar-button:hover {
+    background-color: var(--primary-hover-color);
+}
+.sidebar-button i {
+    margin-right: 8px;
+}
+
+#chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* Allow list to take space */
+    overflow-y: auto; /* Enable scrolling for chat list */
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+}
+
+#chat-list li {
+    padding: 10px 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* For absolute positioning of delete button if needed */
+}
+
+#chat-list li:hover {
+    background-color: var(--sidebar-hover-bg);
+}
+
+#chat-list li.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-text);
+    font-weight: bold;
+}
+#chat-list li.active .delete-chat-button {
+     color: var(--sidebar-active-text); /* Make delete button visible on active */
+}
+#chat-list li .chat-name {
+     flex-grow: 1; /* Allow name to take space */
+     overflow: hidden;
+     text-overflow: ellipsis;
+     margin-right: 5px; /* Space before delete button */
+}
+
+.delete-chat-button {
+    background: none;
+    border: none;
+    color: var(--text-muted-color);
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 2px 4px;
+    margin-left: 5px;
+    opacity: 0; /* Hide by default */
+    transition: opacity 0.2s ease, color 0.2s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
+    line-height: 1; /* Ensure icon aligns well */
+}
+#chat-list li:hover .delete-chat-button {
+    opacity: 0.7; /* Show on hover */
+}
+.delete-chat-button:hover {
+     opacity: 1;
+     color: var(--error-color);
+}
+
+/* --- Chat Area Styles --- */
+.chat-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--container-bg); /* Match container bg */
+    border-radius: 6px; /* Optional: slight rounding */
+    /* border: 1px solid var(--border-color); Optional: border around chat area */
+    padding: 5px; /* Add slight padding */
+    transition: background-color 0.3s ease; /* Theme transition */
+}
+
+/* --- System Prompt Area --- */
+.system-prompt-area {
+    margin-bottom: 10px; /* Reduced margin */
+    padding: 0 10px; /* Add padding */
+    flex-shrink: 0;
+}
+.system-prompt-area label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.85em; /* Smaller label */
+    font-weight: bold;
+    color: var(--text-muted-color);
+}
+#system-prompt-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-input-color);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.95em;
+    resize: vertical;
+    min-height: 40px;
+    max-height: 120px; /* Reduced max height */
+    line-height: 1.4;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* --- Chat Container (within Chat Area) --- */
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+    padding: 0 10px 10px 10px; /* Padding around chat elements */
+    /* background-color: pink; */ /* Debugging bg */
+}
+
+/* Chat Box */
+#chat-box {
+    flex-grow: 1;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px; /* Reduced margin */
+    overflow-y: auto;
+    background-color: var(--chat-box-bg);
+    word-wrap: break-word;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Message Styles */
+.message {
+    margin-bottom: 12px;
+    line-height: 1.4;
+    max-width: 85%;
+    clear: both;
+}
+.message .sender {
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+    font-size: 0.85em;
+    color: var(--text-muted-color);
+}
+.message .content {
+    padding: 9px 13px; /* Slightly adjusted padding */
+    border-radius: 18px; /* More rounded bubbles */
+    display: inline-block; /* Fit content */
+    word-break: break-word; /* Break long words inside bubble */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.message.user { float: right; text-align: right; }
+.message.user .sender { display: none; /* Hide "You:" sender label */ }
+.message.user .content {
+    background-color: var(--message-user-bg);
+    color: var(--message-user-text);
+    border-radius: 18px 5px 18px 18px; /* Flipped corner */
+    text-align: left;
+}
+
+.message.assistant { float: left; text-align: left; }
+.message.assistant .sender { display: none; /* Hide "Assistant:" sender label */ }
+.message.assistant .content {
+    background-color: var(--message-assistant-bg);
+    color: var(--message-assistant-text);
+    border: 1px solid var(--message-assistant-border);
+    border-radius: 5px 18px 18px 18px; /* Standard corner */
+}
+
+.message.error { float: none; text-align: left; clear: both; width: 100%; max-width: 100%; }
+.message.error .sender { display: none; }
+.message.error .content {
+    color: var(--error-color);
+    font-style: italic;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.9em;
+}
+
+#chat-box::after { content: ""; display: table; clear: both; }
+
+/* Input Area */
+#input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px; /* Reduced margin */
+    flex-shrink: 0;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--border-input-color);
+    border-radius: 4px;
+    resize: none;
+    font-size: 1em;
+    line-height: 1.4;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+#user-input::placeholder { color: var(--text-muted-color); opacity: 0.8; }
+#user-input:disabled {
+     background-color: var(--chat-box-bg);
+     cursor: not-allowed;
+     opacity: 0.7;
+}
+
+#send-button {
+    padding: 0 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+#send-button:hover:not(:disabled) { background-color: var(--primary-hover-color); }
+#send-button:disabled {
+    background-color: var(--secondary-color);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Controls Area */
+#controls-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space items out */
+    gap: 10px; /* Reduced gap */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    margin-bottom: 8px; /* Reduced margin */
+    padding-top: 8px; /* Reduced padding */
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Reduced gap */
+    flex-basis: auto; /* Allow flexible basis */
+    flex-grow: 1; /* Allow groups to grow */
+    min-width: 150px; /* Prevent groups from becoming too small */
+}
+.control-group:last-child { /* Target the speed control group */
+     justify-content: flex-end; /* Push speed control right */
+     flex-grow: 0; /* Don't let speed group grow excessively */
+     min-width: fit-content; /* Size based on content */
+}
+
+.control-group label {
+     white-space: nowrap;
+     color: var(--text-muted-color);
+     font-size: 0.85em; /* Smaller labels */
+     margin-right: 4px;
+}
+
+#controls-area select,
+#controls-area input[type="range"] {
+    padding: 4px 6px; /* Smaller padding */
+    border: 1px solid var(--border-input-color);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.9em; /* Smaller font in controls */
+    flex-grow: 1; /* Allow control to take space within group */
+    max-width: 180px; /* Limit max width of controls */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+#controls-area select:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background-color: var(--chat-box-bg);
+}
+#controls-area input[type="range"] {
+    cursor: pointer;
+    padding: 0;
+    vertical-align: middle;
+    max-width: 100px; /* Shorter range slider */
+    flex-grow: 0; /* Don't let range slider grow excessively */
+}
+#speed-value {
+    font-size: 0.85em;
+    color: var(--text-muted-color);
+    min-width: 30px; /* Adjusted width */
+    text-align: right;
+}
+
+/* Status */
+#status {
+    color: var(--text-muted-color);
+    margin: 0;
+    text-align: center;
+    font-size: 0.85em; /* Smaller status */
+    padding-top: 5px;
+    min-height: 1.2em;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.status-working { color: var(--working-color); }
+.status-error { color: var(--error-color); }
+
+
+/* Scrollbar Styles (Optional, Webkit browsers) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05); /* Slightly visible track */
+  border-radius: 4px;
+}
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05); /* Slightly visible track */
+  }
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--text-muted-color);
+  border-radius: 4px;
+  border: 2px solid transparent; /* Use transparent border for padding effect */
+  background-clip: content-box; /* Clip background to content area */
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Specific scrollbars */
+#chat-list::-webkit-scrollbar-track { background: transparent; }
+#chat-list::-webkit-scrollbar-thumb { border: 2px solid var(--sidebar-bg); }
+
+#chat-box::-webkit-scrollbar-track { background: transparent; }
+#chat-box::-webkit-scrollbar-thumb { border: 2px solid var(--chat-box-bg); }
+
+.settings-panel::-webkit-scrollbar-track { background: transparent; }
+.settings-panel::-webkit-scrollbar-thumb { border: 2px solid var(--container-bg); }
